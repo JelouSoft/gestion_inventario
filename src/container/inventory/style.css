@@ -1,0 +1,10 @@
+div.card{
+	height: 87vh;
+	overflow-x: scroll;
+}
+table tbody{
+	overflow-y: scroll;
+}
+.width-10{
+	width: 10em;
+}

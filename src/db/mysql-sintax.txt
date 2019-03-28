@@ -1,0 +1,46 @@
+CREATE DATABASE `inventory`;
+
+CREATE TABLE `product` (
+  `product_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `unit` varchar(255) NOT NULL,
+  `feature` text NOT NULL,
+  `status` int(10) UNSIGNED DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+ALTER TABLE `product` ADD PRIMARY KEY (`product_id`);
+
+CREATE TABLE `stock` (
+  `stock_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `product_id` int(10) UNSIGNED NOT NULL,
+  `stock` float(10) NOT NULL,
+  `status` int(10) UNSIGNED DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+ALTER TABLE `stock` ADD PRIMARY KEY (`stock_id`);
+
+ALTER TABLE `stock` ADD CONSTRAINT `fk_stock_product` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE `inventory_control` (
+  `inventory_control_id` int(10) UNSIGNED NOT NULL,
+  `product_id` int(10) UNSIGNED NOT NULL,
+  `current_stock` float NOT NULL,
+  `quantity` float NOT NULL,
+  `action` int(10) UNSIGNED NOT NULL,
+  `annotation` text NOT NULL,
+  `status` int(10) UNSIGNED NOT NULL DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+ALTER TABLE `inventory_control`
+  ADD PRIMARY KEY (`inventory_control_id`);
+
+ALTER TABLE `inventory_control`
+  MODIFY `inventory_control_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `inventory_control` ADD CONSTRAINT `fk_inventory_control_product` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE;
