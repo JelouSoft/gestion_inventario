@@ -1,7 +1,7 @@
 CREATE DATABASE `inventory`;
 
 CREATE TABLE `product` (
-  `product_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `product_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
   `unit` varchar(255) NOT NULL,
   `feature` text NOT NULL,
@@ -12,8 +12,11 @@ CREATE TABLE `product` (
 
 ALTER TABLE `product` ADD PRIMARY KEY (`product_id`);
 
+ALTER TABLE `product`
+  MODIFY `product_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 CREATE TABLE `stock` (
-  `stock_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `stock_id` int(10) UNSIGNED NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
   `stock` float(10) NOT NULL,
   `status` int(10) UNSIGNED DEFAULT '1',
@@ -44,3 +47,5 @@ ALTER TABLE `inventory_control`
   MODIFY `inventory_control_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `inventory_control` ADD CONSTRAINT `fk_inventory_control_product` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `product` ADD `classification` VARCHAR(255) NOT NULL DEFAULT '' AFTER `unit`, ADD `location` VARCHAR(255) NOT NULL DEFAULT '' AFTER `classification`;

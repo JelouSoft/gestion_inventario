@@ -9,6 +9,8 @@
 	
 	$name = (isset($_POST['name'])) ? $_POST['name'] : "";
 	$unit = (isset($_POST['unit'])) ? $_POST['unit'] : "";
+	$classification = (isset($_POST['classification'])) ? $_POST['classification'] : "";
+	$location = (isset($_POST['location'])) ? $_POST['location'] : "";
 	$feature = (isset($_POST['feature'])) ? $_POST['feature'] : "";
 	$stock = (isset($_POST['stock'])) ? $_POST['stock'] : 0;
 
@@ -27,7 +29,7 @@
 		exit();
 	}
 
-	$product_id = $product_class->create($name, $unit, $feature);
+	$product_id = $product_class->create($name, $unit, $classification, $location, $feature);
 
 	if($product_id === 0){
 		echo json_encode(["isOk" => false, "message" => "Error interno de servidor. PR001"]);

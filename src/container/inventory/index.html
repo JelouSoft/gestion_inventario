@@ -24,14 +24,18 @@
 			<div class="row">
 				<div class="col-12">
 					<div class="card mt-2">
-						<table class="table table-sm table-hover">
+						<table class="table table-sm table-hover" id="main">
 						  <thead>
 						    <tr>
-						      <th scope="col">Producto</th>
+						      <th scope="col" class="ordenar_por_texto">Producto <i class="fas fa-angle-down"></i></th>
+						      <th scope="col" class="ordenar_por_texto">Clasificación <i class="fas fa-angle-down"></i></th>
+						      <th scope="col" class="ordenar_por_texto">Ubicación <i class="fas fa-angle-down"></i></th>
 						      <th scope="col">Características</th>
 						      <th scope="col">Unidad</th>
 						      <th scope="col" class="text-center">Existencia</th>
-						      <th scope="col"></th>
+						      <th scope="col" class="width-10">
+						      	<input type="text" class="form-control form-control-sm" id="busqueda" placeholder="Busqueda" />
+						      </th>
 						    </tr>
 						  </thead>
 						  <tbody></tbody>
@@ -65,8 +69,30 @@
 							</div>
 							<div class="row">
 								<div class="col-12 form-group">
+									<label for="classification">Clasificación</label>
+									<select class="form-control" id="classification">
+										<option value="1">Herramientas</option>
+										<option value="2">Tuberías y Conexiones</option>
+										<option value="3">Válvulas</option>
+										<option value="4">Equipo de Seguridad</option>
+										<option value="5">Equipo de Limpieza</option>
+										<option value="6">Equipo de Laboratorio</option>
+										<option value="7">Motores y bombas</option>
+										<option value="8">Almacenamiento</option>
+										<option value="9">Misceláneo</option>
+									</select>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12 form-group">
 									<label for="unit">Unidad (singular)</label>
 									<input type="text" class="form-control" id="unit" value="Pieza" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12 form-group">
+									<label for="location">Ubicación</label>
+									<input type="text" class="form-control" id="location" />
 								</div>
 							</div>
 							<div class="row stock">

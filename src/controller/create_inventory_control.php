@@ -43,9 +43,9 @@
 		exit();
 	}
 
-	$new_stock = ($action === 0) ? $current_stock - $quantity : $current_stock + $quantity;
+	$new_stock = ($action == 0) ? $current_stock - $quantity : $current_stock + $quantity;
 
 	$stock_class->update_stock_by_product_id($new_stock, $product_id);
 
-	echo json_encode(["isOk" => true, "message" => "El inventario se actualizó correctamente."]);
+	echo json_encode(["isOk" => true, "message" => $action]);
 ?>

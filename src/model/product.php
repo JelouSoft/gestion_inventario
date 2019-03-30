@@ -10,14 +10,14 @@ class Product{
 		self::$active_status = 1;
 	}
 
-	function create($name, $unit, $feature) {
+	function create($name, $unit, $classification, $location, $feature) {
 
 		$product_id = 0;
 
-		$query = "INSERT INTO `product` (`product_id`, `name`, `unit`, `feature`, `status`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);";
+		$query = "INSERT INTO `product` (`product_id`, `name`, `unit`, `classification`, `location`, `feature`, `status`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);";
 
 		if($stmt = self::$mysqli->prepare($query)){
-			$stmt->bind_param("sssi", $name, $unit, $feature, self::$active_status);
+			$stmt->bind_param("sssssi", $name, $unit, $classification, $location, $feature, self::$active_status);
 			$stmt->execute();
 			$product_id = self::$mysqli->insert_id;
 			$stmt->close();
@@ -34,6 +34,8 @@ class Product{
 		    `product`.`product_id`,
 		    `product`.`name`,
 		    `product`.`unit`,
+		    `product`.`classification`,
+		    `product`.`location`,
 		    `product`.`feature`,
 		    `stock`.`stock`,
 		    `product`.`status`,
@@ -43,17 +45,20 @@ class Product{
 		    `product`
 		INNER JOIN `stock` ON `stock`.`product_id` = `product`.`product_id`
 		WHERE
-		    `product`.`status` = ?";
+		    `product`.`status` = ?
+		ORDER BY `product`.`name`";
 
 		if($stmt = self::$mysqli->prepare($query)){
 			$stmt->bind_param("i", self::$active_status);
 			$stmt->execute();
-			$stmt->bind_result($product_id, $name, $unit, $feature, $stock, $status, $created_at, $updated_at);
+			$stmt->bind_result($product_id, $name, $unit, $classification, $location, $feature, $stock, $status, $created_at, $updated_at);
 			while ($stmt->fetch()) {
 				$data[] = [
 					"product_id" => $product_id,
 					"name" => $name,
 					"unit" => $unit,
+					"classification" => $classification,
+					"location" => $location,
 					"feature" => $feature,
 					"stock" => $stock,
 					"status" => $status,
@@ -74,6 +79,8 @@ class Product{
 		    `product`.`product_id`,
 		    `product`.`name`,
 		    `product`.`unit`,
+		    `product`.`classification`,
+		    `product`.`location`,
 		    `product`.`feature`,
 		    `stock`.`stock`,
 		    `product`.`status`,
@@ -88,11 +95,14 @@ class Product{
 		if($stmt = self::$mysqli->prepare($query)){
 			$stmt->bind_param("ii", $product_id, self::$active_status);
 			$stmt->execute();
-			$stmt->bind_result($product_id, $name, $unit, $feature, $stock, $status, $created_at, $updated_at);
+			$stmt->bind_result($product_id, $name, $unit, $classification, $location, $feature, $stock, $status, $created_at, $updated_at);
 			while ($stmt->fetch()) {
 				$data = [
 					"product_id" => $product_id,
 					"name" => $name,
+					"unit" => $unit,
+					"classification" => $classification,
+					"location" => $location,
 					"unit" => $unit,
 					"feature" => $feature,
 					"stock" => $stock,
@@ -117,10 +127,10 @@ class Product{
 		}
 	}
 
-	function update($name, $unit, $feature, $product_id) {
-		$query = "UPDATE `product` SET `name` = ?, `unit` = ?, `feature` = ? WHERE `product_id` = ?;";
+	function update($name, $unit, $classification, $location, $feature, $product_id) {
+		$query = "UPDATE `product` SET `name` = ?, `unit` = ?, `classification` = ?, `location` = ?, `feature` = ? WHERE `product_id` = ?;";
 		if($stmt = self::$mysqli->prepare($query)){
-			$stmt->bind_param("sssi", $name, $unit, $feature, $product_id);
+			$stmt->bind_param("sssssi", $name, $unit, $classification, $location, $feature, $product_id);
 			$stmt->execute();
 			$stmt->close();
 		}

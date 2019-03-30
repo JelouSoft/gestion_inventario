@@ -1,9 +1,18 @@
+import { filtrar_tabla, ordenar_fila } from '../../helper/js/_general.js';
 import { ajax_call } from '../../helper/js/ajax.js';
 import { 
 	success_sweet_alert, 
 	error_sweet_alert, 
 	confirm_sweet_alert 
 } from '../../helper/js/sweet_alert.js';
+
+$("table.table thead").on('click','th.ordenar_por_texto',function(){
+	ordenar_fila(this,'texto');
+});
+
+$("#busqueda").keyup(function(){
+	filtrar_tabla($(this), 0, $("#main tbody tr"));
+});
 
 $('#open_product_modal').click(function(){
 	clear_product_form();
@@ -53,6 +62,8 @@ $('#create_product').click(function(){
 
 	const name = $('#name').val();
 	const unit = $('#unit').val();
+	const classification = $('#classification').val();
+	const location = $('#location').val();
 	const stock = parseFloat($('#stock').val());
 	const feature = $('#feature').val();
 
@@ -73,7 +84,7 @@ $('#create_product').click(function(){
 
 	const url = isNaN(product_id) ? "create_product" : "update_product";
 	const type = "POST";
-	const data = { product_id, name, unit, stock, feature };
+	const data = { product_id, name, unit, classification, location, stock, feature };
 
 	ajax_call(url, data, type, ({isOk, message}) => {
 		if(!isOk){
@@ -143,6 +154,8 @@ $("table.table tbody").on('click', '.edit_product', function() {
 		if(data.length === 0){ return; }
 		$('#name').val(data.name);
 		$('#unit').val(data.unit);
+		$('#classification option[value="' + data.classification + '"]').prop("selected", true);
+		$('#location').val(data.location);
 		$('#stock').val(data.stock);
 		$('#feature').val(data.feature);
 		$('#create_product').data('id', data.product_id);
@@ -158,6 +171,8 @@ const get_all_products = () => {
 		for(let v of data) {
 			$("table.table tbody").append('<tr>' + 
 				'<td>' + v.name + '</td>' +
+				'<td>' + convert_classification_to_text(v.classification) + '</td>' +
+				'<td>' + v.location + '</td>' +
 				'<td>' + v.feature + '</td>' +
 				'<td>' + v.unit + '</td>' +
 				'<td class="text-center">' + parseFloat(v.stock).toFixed(2) + '</td>' +
@@ -178,6 +193,7 @@ const clear_product_form = () => {
 	$('#name').val('');
 	$('#unit').val('Pieza');
 	$('#stock').val('');
+	$('#location').val('');
 	$('#feature').val('');
 	$('.stock').show();
 	$('#create_product').data('id', undefined);
@@ -193,6 +209,22 @@ const clear_inventory_control_form = () => {
 const code_to_symbol = (code) => {
 	const symbols = { 0: "-", 1: "+" };
 	return symbols[code];
+}
+
+const convert_classification_to_text = key => {
+	const classifications = [
+		"Indefinido",
+		"Herramientas",
+		"Tuberías y Conexiones",
+		"Válvulas",
+		"Equipo de Seguridad",
+		"Equipo de Limpieza",
+		"Equipo de Laboratorio",
+		"Motores y bombas",
+		"Almacenamiento",
+		"Misceláneo"
+	];
+	return classifications[key];
 }
 
 $(function () {

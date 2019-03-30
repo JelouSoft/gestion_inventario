@@ -10,6 +10,8 @@
 	$product_id = (isset($_POST['product_id'])) ? $_POST['product_id'] : 0;
 	$name = (isset($_POST['name'])) ? $_POST['name'] : "";
 	$unit = (isset($_POST['unit'])) ? $_POST['unit'] : "";
+	$classification = (isset($_POST['classification'])) ? $_POST['classification'] : "";
+	$location = (isset($_POST['location'])) ? $_POST['location'] : "";
 	$feature = (isset($_POST['feature'])) ? $_POST['feature'] : "";
 
 	if($product_id === 0 || !is_numeric($product_id)){
@@ -27,7 +29,7 @@
 		exit();
 	}
 
-	$product_class->update($name, $unit, $feature, $product_id);
+	$product_class->update($name, $unit, $classification, $location, $feature, $product_id);
 
 	echo json_encode(["isOk" => true, "message" => "El producto se actualizó correctamente."]);
 ?>
