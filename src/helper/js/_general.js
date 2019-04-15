@@ -1,11 +1,12 @@
 const filtrar_tabla = (filtro, columna, tabla) => {
 	let rex = new RegExp(filtro.val(), 'i');
     tabla.addClass('d-none').removeClass('d-show');
-
-    tabla.filter(function(i, v) {
-        var $t = $(this).children(":eq(" + columna + ")");
+   	columna.forEach(el => {
+	    tabla.filter(function(i, v) {
+    		var $t = $(this).children(":eq(" + el + ")");
         return rex.test($t.text());
-    }).removeClass('d-none').addClass('d-show');
+	    }).removeClass('d-none').addClass('d-show');
+    }); 
 };
 
 const ordenar_fila = (elemento, tipo = 'texto') => {

@@ -47,5 +47,5 @@
 
 	$stock_class->update_stock_by_product_id($new_stock, $product_id);
 
-	echo json_encode(["isOk" => true, "message" => $action]);
+	echo json_encode(["isOk" => true, "message" => "El stock se actualizó correctamente."]);
 ?>

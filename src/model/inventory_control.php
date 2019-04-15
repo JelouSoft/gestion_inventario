@@ -64,6 +64,48 @@ class InventoryControl{
 		}
 		return $data;
 	}
+
+	function get() {
+		$data = [];
+		$query = "SELECT
+		    `inventory_control`.`inventory_control_id`,
+		    `product`.`name`,
+		    `inventory_control`.`current_stock`,
+		    `inventory_control`.`quantity`,
+		    `inventory_control`.`action`,
+		    `inventory_control`.`annotation`,
+		    `inventory_control`.`status`,
+		    `inventory_control`.`created_at`,
+		    `inventory_control`.`updated_at`
+		FROM
+		    `inventory_control`
+		INNER JOIN
+				`product`
+			ON
+				`product`.`product_id` = `inventory_control`.`product_id`
+		WHERE
+		 	 	`inventory_control`.`status` = ?;";
+		if($stmt = self::$mysqli->prepare($query)){
+			$stmt->bind_param("i", self::$active_status);
+			$stmt->execute();
+			$stmt->bind_result($inventory_control_id, $product_name, $current_stock, $quantity, $action, $annotation, $status, $created_at, $updated_at);
+			while ($stmt->fetch()) {
+				$data[] = [
+					"inventory_control_id" => $inventory_control_id,
+					"product_name" => $product_name,
+					"current_stock" => $current_stock,
+					"quantity" => $quantity,
+					"action" => $action,
+					"annotation" => $annotation,
+					"status" => $status,
+					"created_at" => $created_at,
+					"updated_at" => $updated_at
+				];
+			}
+			$stmt->close();
+		}
+		return $data;
+	}
 	
 }
 

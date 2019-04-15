@@ -15,9 +15,12 @@
 				<div class="col-md-9 col-8">
 					<h4>Gestión de Inventario</h4>
 				</div>
-				<div class="col-md-3 col-4 text-right">
+				<div class="col-md-3 col-4 text-right" id="menu">
 					<button type="button" id="open_product_modal" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Nuevo Producto">
 						<i class="fas fa-plus"></i>
+					</button>
+					<button type="button" id="open_get_inventory_control_modal" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="Movimientos de Inventario">
+						<i class="fas fa-chart-line"></i>
 					</button>
 				</div>					
 			</div>
@@ -30,7 +33,7 @@
 						      <th scope="col" class="ordenar_por_texto">Producto <i class="fas fa-angle-down"></i></th>
 						      <th scope="col" class="ordenar_por_texto">Clasificación <i class="fas fa-angle-down"></i></th>
 						      <th scope="col" class="ordenar_por_texto">Ubicación <i class="fas fa-angle-down"></i></th>
-						      <th scope="col">Características</th>
+						      <th scope="col" class="ordenar_por_texto">Características <i class="fas fa-angle-down"></i></th>
 						      <th scope="col">Unidad</th>
 						      <th scope="col" class="text-center">Existencia</th>
 						      <th scope="col" class="width-10">
@@ -178,6 +181,7 @@
 			      <table id="inventory_control" class="table table-sm table-hover">
 						  <thead>
 						    <tr>
+						      <th scope="col" class="d-none general_inventory_control">Producto</th>
 						      <th scope="col" class="text-center">Cantidad</th>
 						      <th scope="col" class="text-center">Existencia</th>
 						      <th scope="col">Anotación</th>
@@ -188,6 +192,32 @@
 						</table>
 			      <div class="modal-footer">
 			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- MODAL PARA INICIO DE SESIÓN -->
+			<div id="sign_in_modal" class="modal" tabindex="-1" role="dialog">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			      	<h5 class="modal-title">Credenciales de Acceso</h5>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body">
+			      	<div class="row">
+								<div class="col-12 form-group">
+									<label for="password">Contraseña</label>
+									<input type="password" class="form-control" id="password" />
+								</div>
+							</div>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Soy Invitado</button>
+			        <button type="button" class="btn btn-primary" id="sign_in">Iniciar Sesión</button>
 			      </div>
 			    </div>
 			  </div>

@@ -6,12 +6,58 @@ import {
 	confirm_sweet_alert 
 } from '../../helper/js/sweet_alert.js';
 
+$("#sign_in").click(function(){
+	const password = $("#password").val();
+	ajax_call("sign_in", { password }, "POST", ({isOk, message}) => {
+		if(!isOk){
+			error_sweet_alert(message);
+			return;
+		}
+		success_sweet_alert(message);
+		$(".btn").prop('disabled', false);
+		$('#sign_in_modal').modal('hide');
+		return;
+	});
+});
+
+$("#sign_in_modal").modal('show');
+$("#menu .btn").prop('disabled', true);
+
 $("table.table thead").on('click','th.ordenar_por_texto',function(){
 	ordenar_fila(this,'texto');
 });
 
 $("#busqueda").keyup(function(){
-	filtrar_tabla($(this), 0, $("#main tbody tr"));
+	filtrar_tabla($(this), [0, 3], $("#main tbody tr"));
+});
+
+$('#open_get_inventory_control_modal').click(function(){
+	ajax_call("get_inventory_control", { }, "GET", (data) => {
+		$('.general_inventory_control').removeClass('d-none');
+		$("table#inventory_control tbody").empty();
+		$('#get_inventory_control_modal').modal('show');
+		if(data.length === 0){
+			$("table#inventory_control tbody").append('<tr>' +
+				'<td colspan="4" class="text-center">' +
+					'No se encontraron registros en base de datos' +
+				'</td>' +
+			'</tr>');
+			return;
+		}
+		for(let v of data) {
+			const new_stock = (parseInt(v.action) === 0) 
+				? parseFloat(v.current_stock) - parseFloat(v.quantity)
+				: parseFloat(v.current_stock) + parseFloat(v.quantity);
+
+			$("table#inventory_control tbody").append('<tr>' + 
+				'<td>' + v.product_name + '</td>' +
+				'<td class="text-center">' + code_to_symbol(parseInt(v.action)) + v.quantity + '</td>' +
+				'<td class="text-center">' + v.current_stock + ' >>> ' + new_stock  + '</td>' +
+				'<td>' + v.annotation + '</td>' +
+				'<td>' + v.created_at + '</td>' +
+			'</tr>');
+		}	
+	});
 });
 
 $('#open_product_modal').click(function(){
@@ -81,7 +127,7 @@ $('#create_product').click(function(){
 		error_sweet_alert("Proporciona las unidades en existencia.");
 		return;
 	}
-
+	
 	const url = isNaN(product_id) ? "create_product" : "update_product";
 	const type = "POST";
 	const data = { product_id, name, unit, classification, location, stock, feature };
@@ -116,6 +162,7 @@ $("table.table tbody").on('click', '.delete_product', function() {
 $("table.table tbody").on('click', '.get_inventory_control', function() {
 	const product_id = $(this).data('id');
 	ajax_call("get_inventory_control_by_product_id", { product_id }, "GET", (data) => {
+		$('.general_inventory_control').addClass('d-none');
 		$("table#inventory_control tbody").empty();
 		$("#get_inventory_control_modal").modal('show');
 		if(data.length === 0){
@@ -178,10 +225,10 @@ const get_all_products = () => {
 				'<td class="text-center">' + parseFloat(v.stock).toFixed(2) + '</td>' +
 				'<td>' + 
 					'<div class="width-10 float-right">' +
-		      	'<button data-id="' + v.product_id + '" class="edit_stock btn btn-sm btn-warning text-white mr-1" data-toggle="tooltip" data-placement="bottom" title="Editar Stock"><i class="fas fa-cash-register"></i></button>' +
-		      	'<button data-id="' + v.product_id + '" class="get_inventory_control btn btn-sm btn-info mr-1" data-toggle="tooltip" data-placement="bottom" title="Movimientos de Inventario"><i class="fas fa-chart-line"></i></button>' +
-		      	'<button data-id="' + v.product_id + '" class="edit_product btn btn-sm btn-primary mr-1" data-toggle="tooltip" data-placement="bottom" title="Editar Producto"><i class="fas fa-edit"></i></button>' +
-		      	'<button data-id="' + v.product_id + '" class="delete_product btn btn-sm btn-danger" data-toggle="tooltip" data-placement="bottom" title="Eliminar Producto"><i class="fas fa-trash-alt"></i></button>' +
+		      	'<button data-id="' + v.product_id + '" class="edit_stock btn btn-sm btn-warning text-white mr-1" data-toggle="tooltip" data-placement="bottom" title="Editar Stock" disabled><i class="fas fa-cash-register"></i></button>' +
+		      	'<button data-id="' + v.product_id + '" class="get_inventory_control btn btn-sm btn-info mr-1" data-toggle="tooltip" data-placement="bottom" title="Movimientos de Inventario" disabled><i class="fas fa-chart-line"></i></button>' +
+		      	'<button data-id="' + v.product_id + '" class="edit_product btn btn-sm btn-primary mr-1" data-toggle="tooltip" data-placement="bottom" title="Editar Producto" disabled><i class="fas fa-edit"></i></button>' +
+		      	'<button data-id="' + v.product_id + '" class="delete_product btn btn-sm btn-danger" data-toggle="tooltip" data-placement="bottom" title="Eliminar Producto" disabled><i class="fas fa-trash-alt"></i></button>' +
 		      '</div>' +
 				'</td>' +
 			'</tr>');
@@ -196,14 +243,14 @@ const clear_product_form = () => {
 	$('#location').val('');
 	$('#feature').val('');
 	$('.stock').show();
-	$('#create_product').data('id', undefined);
+	$('#create_product').data('id', 'undefined');
 	$('#create_product').html('Guardar');
 }
 
 const clear_inventory_control_form = () => {
 	$('#quantity').val('');
 	$('#annotation').val('');
-	$('#create_inventory_control').data('id', undefined);
+	$('#create_inventory_control').data('id', 'undefined');
 }
 
 const code_to_symbol = (code) => {
